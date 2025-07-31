@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Aventura Bosque</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon-192.png" />
+  <meta name="theme-color" content="#4CAF50" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+  </script>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f0f0f0; }
+    .scene { display: none; margin-top: 20px; }
+    button { margin: 10px 0; display: block; padding: 10px; }
+  </style>
+</head>
+<body>
+  <h1>🌲 Aventura en el Bosque 🌲</h1>
+  <p>Estás frente a tres caminos. ¿Cuál eliges?</p>
+
+  <button onclick="showScene('izquierda')">Camino de la izquierda</button>
+  <button onclick="showScene('centro')">Camino del centro</button>
+  <button onclick="showScene('derecha')">Camino de la derecha</button>
+
+  <div id="izquierda" class="scene">
+    <h2>🌳 Bosque profundo</h2>
+    <p>Encuentras una piedra con un mensaje: "Busca la luz donde no hay sombra."</p>
+  </div>
+
+  <div id="centro" class="scene">
+    <h2>🪨 Sendero de rocas</h2>
+    <p>Encuentras una llave brillante en el suelo.</p>
+  </div>
+
+  <div id="derecha" class="scene">
+    <h2>🌉 Puente colgante</h2>
+    <p>El puente cruje, pero al cruzarlo ves un cofre cerrado.</p>
+  </div>
+
+  <script>
+    function showScene(id) {
+      document.querySelectorAll('.scene').forEach(div => div.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>
