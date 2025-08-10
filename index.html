@@ -47,5 +47,62 @@
       document.getElementById(id).style.display = 'block';
     }
   </script>
+
+  <button id="btn-get">Leer valor</button>
+<button id="btn-set">Actualizar valor</button>
+<button id="btn-append">Añadir fila</button>
+
+<div id="salida"></div>
+
+<script>
+  const SCRIPT_URL = 'PEGAR_AQUI_LA_URL_DEL_WEBAPP'; // .../exec
+  const HOJA = 'Hoja1';
+
+  async function api(params) {
+    const url = SCRIPT_URL + '?' + new URLSearchParams(params).toString();
+    const res = await fetch(url, { method: 'GET' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json();
+  }
+
+  // 1) Leer un valor concreto (p. ej., B2)
+  document.getElementById('btn-get').addEventListener('click', async () => {
+    try {
+      const data = await api({ action: 'get', range: `${HOJA}!B2` });
+      document.getElementById('salida').textContent = data.ok
+        ? `Valor en B2: ${data.value}`
+        : `Error: ${data.error}`;
+    } catch (e) {
+      document.getElementById('salida').textContent = 'Error leyendo: ' + e.message;
+    }
+  });
+
+  // 2) Modificar (set) el valor de una celda (p. ej., B2)
+  document.getElementById('btn-set').addEventListener('click', async () => {
+    try {
+      const nuevo = prompt('Nuevo valor para B2:', 'Texto nuevo');
+      if (nuevo == null) return;
+      const data = await api({ action: 'set', range: `${HOJA}!B2`, value: nuevo });
+      document.getElementById('salida').textContent = data.ok ? 'Actualizado OK' : `Error: ${data.error}`;
+    } catch (e) {
+      document.getElementById('salida').textContent = 'Error actualizando: ' + e.message;
+    }
+  });
+
+  // 3) Añadir una nueva fila al final (append)
+  document.getElementById('btn-append').addEventListener('click', async () => {
+    try {
+      const col1 = prompt('Columna 1:', 'valor1') ?? '';
+      const col2 = prompt('Columna 2:', 'valor2') ?? '';
+      const col3 = prompt('Columna 3:', 'valor3') ?? '';
+      const values = JSON.stringify([col1, col2, col3]);
+      const data = await api({ action: 'append', sheet: HOJA, values });
+      document.getElementById('salida').textContent = data.ok ? 'Fila añadida' : `Error: ${data.error}`;
+    } catch (e) {
+      document.getElementById('salida').textContent = 'Error añadiendo: ' + e.message;
+    }
+  });
+</script>
+
 </body>
 </html>
